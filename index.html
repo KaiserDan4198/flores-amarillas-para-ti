@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffd83d">
+  <meta name="description" content="Un jardin de flores amarillas hecho con amor para celebrar el 21 de septiembre a la distancia.">
+  <title>Flores amarillas para ti</title>
+  <style>
+    :root {
+      --sky: #65d9ff;
+      --apricot: #ffb171;
+      --gold: #ffd535;
+      --gold-soft: #fff1a6;
+      --gold-deep: #ffab1d;
+      --leaf: #0d8054;
+      --leaf-light: #4bc676;
+      --rose: #ff4c83;
+      --rose-deep: #d82961;
+      --ink: #31240a;
+      --muted: #6b5420;
+      --paper: rgba(255, 253, 227, 0.84);
+      --paper-strong: rgba(255, 255, 239, 0.96);
+      --green-paper: rgba(220, 255, 226, 0.82);
+      --line: rgba(116, 78, 0, 0.18);
+      --shadow: rgba(64, 43, 0, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #75dfff;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 77% 15%, rgba(255, 247, 146, 0.98) 0 6.3rem, rgba(255, 202, 64, 0.32) 6.4rem 10rem, transparent 10.1rem),
+        linear-gradient(150deg, var(--sky) 0%, #98ebff 39%, #ffd86f 72%, var(--apricot) 100%);
+    }
+
+    .scene {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+    }
+
+    .cloud {
+      position: fixed;
+      z-index: 0;
+      width: clamp(8rem, 18vw, 18rem);
+      height: clamp(2.5rem, 5vw, 5.5rem);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.55);
+      box-shadow:
+        2.8rem -1rem 0 rgba(255, 255, 255, 0.45),
+        6rem 0.2rem 0 rgba(255, 255, 255, 0.33),
+        8.5rem -0.7rem 0 rgba(255, 255, 255, 0.24);
+      animation: drift 46s linear infinite;
+    }
+
+    .cloud.one {
+      top: 9vh;
+      left: -15rem;
+    }
+
+    .cloud.two {
+      top: 26vh;
+      left: 48vw;
+      scale: 0.72;
+      animation-duration: 58s;
+      animation-delay: -20s;
+    }
+
+    .cloud.three {
+      top: 4vh;
+      left: 30vw;
+      scale: 0.55;
+      animation-duration: 51s;
+      animation-delay: -32s;
+    }
+
+    @keyframes drift {
+      from { translate: -18vw 0; }
+      to { translate: 118vw 0; }
+    }
+
+    .layout {
+      position: relative;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: minmax(20rem, 34rem) minmax(18rem, 26rem);
+      align-items: start;
+      gap: clamp(1rem, 3vw, 2rem);
+      width: min(72rem, calc(100vw - 2rem));
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: clamp(1rem, 4vh, 2.3rem) 0;
+    }
+
+    .hero,
+    .panel,
+    .mini-card,
+    .letter {
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      background: var(--paper);
+      box-shadow: 0 1.3rem 3.5rem var(--shadow);
+      backdrop-filter: blur(13px) saturate(1.18);
+    }
+
+    .hero {
+      padding: clamp(1rem, 2.5vw, 1.65rem);
+    }
+
+    .tag {
+      margin: 0 0 0.7rem;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #7a5608;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 11ch;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.7rem, 7.8vw, 6.1rem);
+      line-height: 0.9;
+      letter-spacing: 0;
+      color: #3b2b08;
+      text-wrap: balance;
+    }
+
+    .dedication {
+      margin: 1rem 0 0;
+      max-width: 40ch;
+      font-size: clamp(1rem, 2vw, 1.17rem);
+      line-height: 1.55;
+      color: #403516;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      margin-top: 1.1rem;
+    }
+
+    button {
+      min-height: 2.85rem;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.75rem 1rem;
+      font: inherit;
+      font-weight: 800;
+      color: #432b00;
+      background: linear-gradient(180deg, #fff68c, #ffc72a);
+      box-shadow: 0 0.55rem 1.15rem rgba(116, 74, 0, 0.23), inset 0 1px 0 rgba(255, 255, 255, 0.76);
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0.75rem 1.3rem rgba(116, 74, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.76);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .ghost {
+      color: #fff9dc;
+      background: linear-gradient(180deg, #36a26c, #11774f);
+      box-shadow: 0 0.55rem 1.15rem rgba(6, 84, 53, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    }
+
+    .rose {
+      color: #fff8fb;
+      background: linear-gradient(180deg, #ff709c, #dc2f68);
+      box-shadow: 0 0.55rem 1.15rem rgba(142, 19, 64, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    }
+
+    .panel-stack {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .panel {
+      padding: 1rem;
+    }
+
+    .panel h2,
+    .letter h2 {
+      margin: 0 0 0.55rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.45rem, 3vw, 2rem);
+      line-height: 1.05;
+      color: #493503;
+    }
+
+    .panel p,
+    .letter p {
+      margin: 0;
+      line-height: 1.48;
+      color: #3f3517;
+    }
+
+    .live-note {
+      min-height: 7.2rem;
+      display: grid;
+      align-content: center;
+      background: var(--paper-strong);
+    }
+
+    .note-count {
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #7a5608;
+    }
+
+    .reasons {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 0.7rem;
+    }
+
+    .reason {
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.55rem 0.65rem;
+      border-radius: 0.5rem;
+      background: rgba(255, 245, 156, 0.52);
+    }
+
+    .reason strong {
+      display: grid;
+      place-items: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: #ffd139;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      color: #503300;
+      font-size: 0.92rem;
+    }
+
+    .reason span {
+      line-height: 1.35;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.9rem;
+    }
+
+    .mini-card {
+      min-height: 5.8rem;
+      padding: 0.75rem;
+      box-shadow: 0 0.8rem 1.7rem rgba(64, 43, 0, 0.14);
+      background: var(--green-paper);
+    }
+
+    .mini-card strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      line-height: 1;
+      color: #2b5d20;
+    }
+
+    .mini-card span {
+      display: block;
+      font-size: 0.86rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: #355528;
+    }
+
+    .letter {
+      position: fixed;
+      z-index: 8;
+      left: 50%;
+      bottom: 8vh;
+      width: min(35rem, calc(100vw - 1.5rem));
+      padding: 1.2rem 1.3rem;
+      background: var(--paper-strong);
+      transform: translate(-50%, 1.2rem) scale(0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease, transform 360ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .letter.is-visible {
+      transform: translate(-50%, 0) scale(1);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .letter .signature {
+      margin-top: 0.8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.18rem;
+      color: #5c3e04;
+    }
+
+    .letter button {
+      margin-top: 0.9rem;
+    }
+
+    .toast {
+      position: fixed;
+      z-index: 7;
+      right: clamp(0.75rem, 4vw, 2rem);
+      bottom: clamp(0.75rem, 4vh, 2rem);
+      width: min(24rem, calc(100vw - 1.5rem));
+      padding: 0.95rem 1rem;
+      border-radius: 0.5rem;
+      background: var(--paper-strong);
+      box-shadow: 0 1rem 2.6rem rgba(64, 43, 0, 0.2);
+      transform: translateY(130%);
+      opacity: 0;
+      transition: opacity 260ms ease, transform 360ms cubic-bezier(.2,.8,.2,1);
+    }
+
+    .toast.is-visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast p {
+      margin: 0;
+      line-height: 1.42;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 860px) {
+      body {
+        overflow: auto;
+      }
+
+      canvas {
+        position: fixed;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+        width: calc(100vw - 1.5rem);
+        min-height: auto;
+        padding: 0.75rem 0 16rem;
+      }
+
+      .hero {
+        padding: 1rem;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .letter {
+        bottom: 0.75rem;
+        max-height: calc(100vh - 1.5rem);
+        overflow: auto;
+      }
+    }
+
+    @media (max-width: 430px) {
+      h1 {
+        font-size: clamp(2.6rem, 16vw, 4rem);
+      }
+
+      .panel-stack {
+        gap: 0.7rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="scene" aria-label="Regalo interactivo de flores amarillas">
+    <div class="cloud one"></div>
+    <div class="cloud two"></div>
+    <div class="cloud three"></div>
+    <canvas id="garden" aria-hidden="true"></canvas>
+
+    <div class="layout">
+      <section class="hero" aria-labelledby="title">
+        <p class="tag">21 de septiembre · aunque estemos lejos</p>
+        <h1 id="title">Flores amarillas</h1>
+        <p class="dedication">
+          Amor, hoy no puedo aparecer con un ramo en tu puerta, pero sí puedo regalarte este jardín. Cada flor amarilla nace para recordarte que mi cariño no depende de la distancia: te pienso, te elijo y te amo en todos los kilómetros que hay entre nosotros.
+        </p>
+        <div class="actions" aria-label="Acciones del regalo">
+          <button id="bloom" type="button">Sembrar más flores</button>
+          <button id="noteButton" class="ghost" type="button">Leer otro mensajito</button>
+          <button id="letterButton" class="rose" type="button">Abrir carta</button>
+        </div>
+
+        <div class="mini-grid" aria-label="Pequeños contadores de amor">
+          <div class="mini-card">
+            <strong id="flowerCount">0</strong>
+            <span>flores amarillas para ti</span>
+          </div>
+          <div class="mini-card">
+            <strong id="noteIndex">1</strong>
+            <span>mensajes guardados en este jardín</span>
+          </div>
+          <div class="mini-card">
+            <strong>∞</strong>
+            <span>formas de decirte que te amo</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-stack" aria-label="Mensajes y razones">
+        <article class="panel live-note" aria-live="polite">
+          <h2 id="noteTitle">Un mensajito para ti</h2>
+          <p id="liveNote">Si pudiera mandarte el sol en una cajita, lo haría. Mientras tanto, te dejo estas flores amarillas para que la pantalla también sepa sonreírte.</p>
+          <div class="note-count" id="noteCount">Mensaje 1 de 9</div>
+        </article>
+
+        <article class="panel">
+          <h2>Lo que amo de nosotros</h2>
+          <div class="reasons">
+            <div class="reason"><strong>1</strong><span>Que incluso lejos seguimos encontrando maneras de sentirnos cerquita.</span></div>
+            <div class="reason"><strong>2</strong><span>Que una llamada tuya puede cambiarme el día completo.</span></div>
+            <div class="reason"><strong>3</strong><span>Que no necesito tenerte al lado para saber que eres mi lugar bonito.</span></div>
+            <div class="reason"><strong>4</strong><span>Que la distancia no apagó nada; solo nos enseñó a cuidar mejor lo nuestro.</span></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h2>Promesa amarilla</h2>
+          <p>
+            Hoy te regalo estas flores digitales, pero me guardo una promesa real: cuando vuelva a verte, quiero darte un abrazo largo, flores de verdad y todos los besos que la distancia nos quedó debiendo.
+          </p>
+        </article>
+      </section>
+    </div>
+
+    <section id="letter" class="letter" aria-live="polite" aria-labelledby="letterTitle">
+      <h2 id="letterTitle">Para mi amor</h2>
+      <p>
+        Mi vida, amo nuestra relación porque aun estando lejos hemos sabido quedarnos. Me gusta pensar que lo nuestro no es frágil: es paciente, alegre, terco en lo bonito y lleno de ganas. Cada día contigo me recuerda que amar también es esperar, cuidar, escribir, llamar, reírse por pantalla y seguir eligiéndose.
+      </p>
+      <p class="signature">
+        Estas flores son amarillas porque tú haces que muchas cosas se sientan como sol.
+      </p>
+      <button id="closeLetter" type="button">Guardar cartita</button>
+    </section>
+
+    <aside id="toast" class="toast" aria-live="polite">
+      <p id="toastText">Otra flor acaba de nacer por ella.</p>
+    </aside>
+
+    <p class="sr-only">Pulsa los botones para sembrar flores, leer mensajes y abrir una carta de amor.</p>
+  </main>
+
+  <script>
+    const canvas = document.getElementById("garden");
+    const ctx = canvas.getContext("2d");
+    const bloomButton = document.getElementById("bloom");
+    const noteButton = document.getElementById("noteButton");
+    const letterButton = document.getElementById("letterButton");
+    const closeLetter = document.getElementById("closeLetter");
+    const flowerCount = document.getElementById("flowerCount");
+    const noteIndex = document.getElementById("noteIndex");
+    const liveNote = document.getElementById("liveNote");
+    const noteCount = document.getElementById("noteCount");
+    const letter = document.getElementById("letter");
+    const toast = document.getElementById("toast");
+    const toastText = document.getElementById("toastText");
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const notes = [
+      "Si pudiera mandarte el sol en una cajita, lo haría. Mientras tanto, te dejo estas flores amarillas para que la pantalla también sepa sonreírte.",
+      "La distancia no me quita las ganas de cuidarte. Al contrario: me recuerda todos los días lo mucho que deseo estar contigo.",
+      "Me encanta nuestra forma de querernos: con paciencia, con ternura, con llamadas que se sienten como abrazos y mensajes que llegan justo a tiempo.",
+      "Hoy estas flores aparecen aquí porque no pude llevarlas hasta ti, pero mi amor sí llega. Llega en cada palabra, en cada recuerdo y en cada plan contigo.",
+      "Amo que seas mi persona incluso cuando estamos en ciudades distintas. Hay amores que se miden en presencia; el nuestro también se mide en constancia.",
+      "Cuando te extraño, pienso en el día en que vuelva a verte. Ese pensamiento me calma, me alegra y me recuerda que todo esto vale la pena.",
+      "Gracias por hacer que la distancia no se sienta como ausencia, sino como una espera bonita por todo lo que vamos a vivir.",
+      "Te amo en los días fáciles, en los días largos, en los silencios, en las llamadas, en los planes y en las ganas inmensas de verte.",
+      "Estas flores no se marchitan porque están hechas de algo que tampoco se me acaba: las ganas de elegirte."
+    ];
+
+    const toastMessages = [
+      "Otra flor acaba de nacer por ella.",
+      "Ese petalito va con un te amo escondido.",
+      "El jardín crece como las ganas de verla.",
+      "Cada toque deja una flor y una promesa.",
+      "La distancia no pudo con este ramo."
+    ];
+
+    const colors = {
+      petals: ["#ffe14d", "#ffd21f", "#fff07a", "#ffc02a", "#ffe66b", "#fff5ad"],
+      centers: ["#6e4200", "#8b5405", "#4f3300"],
+      stems: ["#0f7b4d", "#15955d", "#1a6f4d"],
+      leaves: ["#1faa62", "#58ca75", "#0e754d"],
+      hearts: ["#ff4f81", "#ff7aa2", "#e43570"]
+    };
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let time = 0;
+    let flowers = [];
+    let petals = [];
+    let sparkles = [];
+    let hearts = [];
+    let currentNote = 0;
+    let toastTimer = 0;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function random(min, max) {
+      return min + Math.random() * (max - min);
+    }
+
+    function pick(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (!flowers.length) {
+        seedGarden();
+      } else {
+        flowers.forEach((flower) => {
+          flower.x = clamp(flower.x, 20, width - 20);
+          flower.ground = clamp(flower.ground, height * 0.58, height - 24);
+        });
+      }
+    }
+
+    function makeFlower(x, ground, options = {}) {
+      const size = options.size || random(28, 58);
+      return {
+        x,
+        ground,
+        size,
+        stem: options.stem || random(84, 190),
+        petals: Math.floor(random(8, 14)),
+        angle: random(-0.22, 0.22),
+        sway: random(0.55, 1.45),
+        phase: random(0, Math.PI * 2),
+        bloom: options.open ? 1 : random(0.08, 0.6),
+        target: options.open ? 1 : random(0.76, 1),
+        petal: pick(colors.petals),
+        center: pick(colors.centers),
+        stemColor: pick(colors.stems),
+        leaf: pick(colors.leaves)
+      };
+    }
+
+    function seedGarden() {
+      flowers = [];
+      const count = Math.max(18, Math.floor(width / 60));
+      for (let i = 0; i < count; i += 1) {
+        flowers.push(makeFlower(random(14, width - 14), height - random(34, 130), {
+          size: random(20, 48),
+          stem: random(56, 150),
+          open: i % 3 === 0
+        }));
+      }
+      updateCount();
+    }
+
+    function updateCount() {
+      flowerCount.textContent = flowers.length.toString();
+    }
+
+    function updateNote(step = 1) {
+      currentNote = (currentNote + step + notes.length) % notes.length;
+      liveNote.textContent = notes[currentNote];
+      noteIndex.textContent = (currentNote + 1).toString();
+      noteCount.textContent = `Mensaje ${currentNote + 1} de ${notes.length}`;
+      showToast("Te dejé otro mensajito bonito.");
+      addSparkles(28);
+      addHearts(5, width * 0.72, height * 0.32);
+    }
+
+    function showToast(message) {
+      toastText.textContent = message;
+      toast.classList.add("is-visible");
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove("is-visible"), 3600);
+    }
+
+    function addPetalBurst(cx, cy, amount) {
+      for (let i = 0; i < amount; i += 1) {
+        petals.push({
+          x: cx,
+          y: cy,
+          vx: random(-3, 3),
+          vy: random(-5.5, -1.2),
+          gravity: random(0.025, 0.058),
+          spin: random(-0.14, 0.14),
+          angle: random(0, Math.PI * 2),
+          life: random(88, 155),
+          maxLife: 155,
+          size: random(5, 14),
+          color: pick(colors.petals)
+        });
+      }
+    }
+
+    function addSparkles(amount) {
+      for (let i = 0; i < amount; i += 1) {
+        sparkles.push({
+          x: random(0, width),
+          y: random(height * 0.1, height * 0.82),
+          vx: random(-0.25, 0.25),
+          vy: random(-0.4, 0.18),
+          size: random(1.5, 4.5),
+          life: random(55, 130),
+          maxLife: 130
+        });
+      }
+    }
+
+    function addHearts(amount, cx, cy) {
+      for (let i = 0; i < amount; i += 1) {
+        hearts.push({
+          x: cx + random(-28, 28),
+          y: cy + random(-18, 18),
+          vx: random(-0.45, 0.45),
+          vy: random(-1.4, -0.35),
+          size: random(5, 10),
+          life: random(75, 130),
+          maxLife: 130,
+          color: pick(colors.hearts)
+        });
+      }
+    }
+
+    function bloomGarden(extra = 14) {
+      const start = flowers.length;
+      for (let i = 0; i < extra; i += 1) {
+        const x = random(22, width - 22);
+        const ground = height - random(32, 102);
+        const flower = makeFlower(x, ground, {
+          size: random(30, 68),
+          stem: random(84, 190)
+        });
+        flower.bloom = 0.03;
+        flower.target = 1;
+        flowers.push(flower);
+        addPetalBurst(x, ground - flower.stem, 7);
+      }
+      addSparkles(42);
+      addHearts(8, width * 0.72, height * 0.28);
+      showToast(pick(toastMessages));
+      updateCount();
+      if (flowers.length > start && navigator.vibrate) {
+        navigator.vibrate(25);
+      }
+    }
+
+    function plantAt(x, y) {
+      const ground = clamp(y + random(62, 120), height * 0.58, height - 26);
+      const stem = clamp(ground - y, 70, 192);
+      const flower = makeFlower(x, ground, {
+        size: random(32, 66),
+        stem
+      });
+      flower.bloom = 0.02;
+      flower.target = 1;
+      flowers.push(flower);
+      addPetalBurst(x, ground - stem, 14);
+      addSparkles(12);
+      updateCount();
+      showToast(pick(toastMessages));
+    }
+
+    function drawBackground() {
+      const horizon = height * 0.76;
+      const sky = ctx.createLinearGradient(0, 0, 0, height);
+      sky.addColorStop(0, "rgba(255,255,255,0)");
+      sky.addColorStop(0.62, "rgba(255,255,255,0)");
+      sky.addColorStop(1, "rgba(255,177,94,0.38)");
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.save();
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = "#fff3a4";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      const startX = width * 0.36;
+      const endX = width * 0.82;
+      const startY = height * 0.42;
+      const endY = height * 0.23;
+      ctx.moveTo(startX, startY);
+      for (let i = 0; i <= 36; i += 1) {
+        const t = i / 36;
+        const x = startX + (endX - startX) * t;
+        const y = startY + (endY - startY) * t + Math.sin(t * Math.PI * 2 + time * 0.018) * 9;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.restore();
+
+      const hill = ctx.createLinearGradient(0, horizon, 0, height);
+      hill.addColorStop(0, "#2abc72");
+      hill.addColorStop(0.55, "#119765");
+      hill.addColorStop(1, "#086d4f");
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      ctx.lineTo(0, horizon + Math.sin(time * 0.004) * 6);
+      for (let x = 0; x <= width; x += 30) {
+        const y = horizon + Math.sin(x * 0.012 + time * 0.008) * 22 + Math.cos(x * 0.02) * 9;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fillStyle = hill;
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(255,241,116,0.25)";
+      for (let i = 0; i < 18; i += 1) {
+        const x = ((i * 101 + time * 0.08) % (width + 120)) - 60;
+        const y = horizon + 20 + Math.sin(i + time * 0.018) * 18;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 30, 4, -0.08, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawLeaf(x, y, side, size, phase) {
+      const wave = Math.sin(time * 0.025 + phase) * 0.18;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(side * (0.7 + wave));
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(side * size * 0.34, -size * 0.42, side * size, -size * 0.23, side * size * 1.08, 0);
+      ctx.bezierCurveTo(side * size * 0.8, size * 0.25, side * size * 0.3, size * 0.28, 0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawStem(flower, topX, topY) {
+      ctx.save();
+      ctx.strokeStyle = flower.stemColor;
+      ctx.lineWidth = clamp(flower.size / 9, 3, 7);
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(flower.x, flower.ground);
+      const midX = flower.x + Math.sin(flower.phase + time * 0.02) * 8;
+      ctx.quadraticCurveTo(midX, flower.ground - flower.stem * 0.48, topX, topY);
+      ctx.stroke();
+
+      ctx.fillStyle = flower.leaf;
+      const leafY = flower.ground - flower.stem * 0.48;
+      drawLeaf(flower.x, leafY, -1, flower.size * 0.54, flower.phase);
+      drawLeaf(flower.x + 4, leafY + 17, 1, flower.size * 0.45, flower.phase + 1.4);
+      ctx.restore();
+    }
+
+    function drawFlower(flower) {
+      flower.bloom += (flower.target - flower.bloom) * 0.026;
+      const sway = Math.sin(time * 0.018 * flower.sway + flower.phase) * 8;
+      const topX = flower.x + sway + flower.angle * flower.stem;
+      const topY = flower.ground - flower.stem;
+      drawStem(flower, topX, topY);
+
+      ctx.save();
+      ctx.translate(topX, topY);
+      ctx.rotate(Math.sin(time * 0.013 + flower.phase) * 0.08);
+      const open = flower.bloom;
+      const radius = flower.size * open;
+      for (let i = 0; i < flower.petals; i += 1) {
+        const angle = (Math.PI * 2 / flower.petals) * i;
+        ctx.save();
+        ctx.rotate(angle);
+        const gradient = ctx.createLinearGradient(0, -radius * 0.15, radius * 1.2, 0);
+        gradient.addColorStop(0, "#fff8a0");
+        gradient.addColorStop(0.55, flower.petal);
+        gradient.addColorStop(1, "#ffae18");
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.ellipse(radius * 0.55, 0, radius * 0.47, radius * 0.18, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      ctx.beginPath();
+      ctx.arc(0, 0, Math.max(4, flower.size * 0.18 * open), 0, Math.PI * 2);
+      ctx.fillStyle = flower.center;
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.beginPath();
+      ctx.arc(-flower.size * 0.05, -flower.size * 0.06, Math.max(1.5, flower.size * 0.04), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawPetals() {
+      petals = petals.filter((petal) => petal.life > 0);
+      petals.forEach((petal) => {
+        petal.life -= 1;
+        petal.vy += petal.gravity;
+        petal.x += petal.vx + Math.sin(time * 0.03 + petal.life) * 0.35;
+        petal.y += petal.vy;
+        petal.angle += petal.spin;
+        const alpha = clamp(petal.life / petal.maxLife, 0, 1);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.translate(petal.x, petal.y);
+        ctx.rotate(petal.angle);
+        ctx.fillStyle = petal.color;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, petal.size, petal.size * 0.42, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    function drawSparkles() {
+      sparkles = sparkles.filter((sparkle) => sparkle.life > 0);
+      sparkles.forEach((sparkle) => {
+        sparkle.life -= 1;
+        sparkle.x += sparkle.vx;
+        sparkle.y += sparkle.vy;
+        const alpha = clamp(sparkle.life / sparkle.maxLife, 0, 1);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = "#fff9a8";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(sparkle.x - sparkle.size, sparkle.y);
+        ctx.lineTo(sparkle.x + sparkle.size, sparkle.y);
+        ctx.moveTo(sparkle.x, sparkle.y - sparkle.size);
+        ctx.lineTo(sparkle.x, sparkle.y + sparkle.size);
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+
+    function drawHeartShape(x, y, size, color, alpha) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(x, y + size * 0.35);
+      ctx.bezierCurveTo(x - size, y - size * 0.4, x - size * 1.25, y + size * 0.55, x, y + size * 1.25);
+      ctx.bezierCurveTo(x + size * 1.25, y + size * 0.55, x + size, y - size * 0.4, x, y + size * 0.35);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawHearts() {
+      const baseY = height * 0.32;
+      const baseX = width * 0.72;
+      for (let i = 0; i < 7; i += 1) {
+        const x = baseX + Math.sin(time * 0.011 + i) * 48 + i * 7;
+        const y = baseY + Math.cos(time * 0.014 + i * 1.7) * 24 - i * 13;
+        drawHeartShape(x, y, 6 + Math.sin(time * 0.03 + i) * 1.8, "#ff4f81", 0.34);
+      }
+
+      hearts = hearts.filter((heart) => heart.life > 0);
+      hearts.forEach((heart) => {
+        heart.life -= 1;
+        heart.x += heart.vx;
+        heart.y += heart.vy;
+        drawHeartShape(heart.x, heart.y, heart.size, heart.color, clamp(heart.life / heart.maxLife, 0, 1) * 0.72);
+      });
+    }
+
+    function loop() {
+      time += prefersReducedMotion ? 0.25 : 1;
+      ctx.clearRect(0, 0, width, height);
+      drawBackground();
+      drawHearts();
+      flowers.sort((a, b) => a.ground - b.ground).forEach(drawFlower);
+      drawPetals();
+      drawSparkles();
+      if (!prefersReducedMotion) {
+        requestAnimationFrame(loop);
+      }
+    }
+
+    bloomButton.addEventListener("click", () => bloomGarden(16));
+    noteButton.addEventListener("click", () => updateNote(1));
+    letterButton.addEventListener("click", () => {
+      letter.classList.add("is-visible");
+      showToast("Le abriste una carta hecha con todo tu amor.");
+      addSparkles(38);
+      addHearts(10, width * 0.5, height * 0.45);
+    });
+    closeLetter.addEventListener("click", () => letter.classList.remove("is-visible"));
+
+    window.addEventListener("pointerdown", (event) => {
+      if (event.target.closest("button, .hero, .panel, .letter, .toast")) {
+        return;
+      }
+      plantAt(event.clientX, event.clientY);
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        letter.classList.remove("is-visible");
+      }
+    });
+
+    window.addEventListener("resize", resize);
+
+    resize();
+    addSparkles(32);
+    if (prefersReducedMotion) {
+      flowers.forEach((flower) => {
+        flower.bloom = 1;
+        flower.target = 1;
+      });
+      drawBackground();
+      drawHearts();
+      flowers.forEach(drawFlower);
+    } else {
+      requestAnimationFrame(loop);
+      window.setTimeout(() => bloomGarden(5), 750);
+      window.setInterval(() => {
+        addPetalBurst(random(width * 0.35, width * 0.86), random(height * 0.18, height * 0.5), 5);
+      }, 4200);
+    }
+  </script>
+</body>
+</html>
